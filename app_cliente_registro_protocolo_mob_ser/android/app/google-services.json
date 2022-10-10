@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "412689419937",
+    "project_id": "registro-protocolo-mob-ser",
+    "storage_bucket": "registro-protocolo-mob-ser.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:412689419937:android:252454cab866a57ddc2ae0",
+        "android_client_info": {
+          "package_name": "br.com.registro_protocolo_mob_ser.app_cliente_registro_protocolo_mob_ser"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "412689419937-pr4mjrormfb9fi2vlkvv34pc34s6a58d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmA4k-W2lxet2eJToDkV4Cf9IsDldXtrA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "412689419937-pr4mjrormfb9fi2vlkvv34pc34s6a58d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
