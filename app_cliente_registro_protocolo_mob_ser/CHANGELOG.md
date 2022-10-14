@@ -1,3 +1,5 @@
+## [0.0.2-1] - 13/10/2022 
+Ajuste na Configuração Firebase Hosting, para pasta public. 
 ## [0.0.2] - 13/10/2022 
 Configuração Firebase Hosting. 
 ## [0.0.1] - 13/10/2022 
