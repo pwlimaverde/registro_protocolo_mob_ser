@@ -56,11 +56,11 @@ class BoletoModel {
   });
 
   Map<String, dynamic> toMap() {
-    return {
+    final Map<String, dynamic> map = {
       'ID Cliente': idCliente,
       'Cliente': cliente,
       'Documento': documento,
-      'Email': email,
+      'Email': email ?? "",
       'Telefone Fixo': telefoneFixo,
       'Telefone Movel': telefoneMovel,
       'ID Contrato': idContrato,
@@ -81,8 +81,47 @@ class BoletoModel {
       'CEP': cep,
       'Solicitante da Geração': solicitanteDaGeracao,
       'ID Fatura': idFatura,
-      'Referencia': referencia,
+      'Referencia': referencia ?? "",
     };
+    return map;
+  }
+
+  List<dynamic> toListXlsx() {
+    return [
+      idCliente,
+      cliente,
+      documento,
+      email,
+      telefoneFixo,
+      telefoneMovel,
+      idContrato,
+      dataHabilitacaoContrato != null
+          ? dataFormatoDDMMYYYY.format(dataHabilitacaoContrato!.toDate())
+          : "",
+      numeroDeBoleto,
+      formaDeCobranca,
+      dataVencimentoFatura != null
+          ? dataFormatoDDMMYYYY.format(dataVencimentoFatura!.toDate())
+          : "",
+      valorFatura != null ? "R\$ ${valorFatura!.toDouble()}" : 0.0,
+      dataEmissaoFatura != null
+          ? dataFormatoDDMMYYYY.format(dataEmissaoFatura!.toDate())
+          : "",
+      arquivo,
+      dataImpressaoFatura != null
+          ? dataFormatoDDMMYYYY.format(dataImpressaoFatura!.toDate())
+          : "",
+      uf,
+      cidade,
+      bairro,
+      tipoLogradouro,
+      logradouro,
+      numero,
+      cep,
+      solicitanteDaGeracao,
+      idFatura,
+      referencia,
+    ];
   }
 
   factory BoletoModel.fromMapCsv(Map<String, dynamic> map) {
@@ -91,8 +130,8 @@ class BoletoModel {
       cliente: map['Cliente'] ?? '',
       documento: int.tryParse(map['Documento'].toString()) ?? 0,
       email: map['Email'] ?? '',
-      telefoneFixo: int.tryParse(map['Telefone Fixo'].toString()) ?? 0,
-      telefoneMovel: int.tryParse(map['Telefone Movel'].toString()) ?? 0,
+      telefoneFixo: int.tryParse(map['Telefone Fixo']) ?? 0,
+      telefoneMovel: int.tryParse(map['Telefone Movel']) ?? 0,
       idContrato: int.tryParse(map['ID Contrato'].toString()) ?? 0,
       dataHabilitacaoContrato: Timestamp.fromDate(
           DateTime.parse(map['Data Habilitacao contrato'].split(" ")[0])),
@@ -129,8 +168,8 @@ class BoletoModel {
       cliente: map['Cliente'] ?? '',
       documento: int.tryParse(map['Documento'].toString()) ?? 0,
       email: map['Email'] ?? '',
-      telefoneFixo: int.tryParse(map['Telefone Fixo'].toString()) ?? 0,
-      telefoneMovel: int.tryParse(map['Telefone Movel'].toString()) ?? 0,
+      telefoneFixo: int.tryParse(map['Telefone Fixo']) ?? 0,
+      telefoneMovel: int.tryParse(map['Telefone Movel']) ?? 0,
       idContrato: int.tryParse(map['ID Contrato'].toString()) ?? 0,
       dataHabilitacaoContrato: Timestamp.fromDate(
           DateTime.parse(map['Data Habilitacao contrato'].split(" ")[0])),
@@ -166,8 +205,8 @@ class BoletoModel {
       cliente: map['Cliente'] ?? '',
       documento: int.tryParse(map['Documento'].toString()) ?? 0,
       email: map['Email'] ?? '',
-      telefoneFixo: int.tryParse(map['Telefone Fixo'].toString()) ?? 0,
-      telefoneMovel: int.tryParse(map['Telefone Movel'].toString()) ?? 0,
+      telefoneFixo: map['Telefone Fixo'] ?? 0,
+      telefoneMovel: map['Telefone Movel'] ?? 0,
       idContrato: int.tryParse(map['ID Contrato'].toString()) ?? 0,
       dataHabilitacaoContrato: map['Data Habilitacao contrato'],
       numeroDeBoleto: map['Número de Boleto'] ?? '',

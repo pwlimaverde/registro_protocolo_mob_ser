@@ -7,7 +7,10 @@ class UploadRemessaFirebaseDatasource implements Datasource<bool> {
   Future<bool> call({required ParametersReturnResult parameters}) async {
     try {
       if (parameters is ParametrosUploadRemessa) {
+        // final model = parameters.remessaUpload;
+        // print(model);
         final mapRemessa = parameters.remessaUpload.toMap();
+
         await FirebaseFirestore.instance
             .collection("remessas")
             .doc(parameters.remessaUpload.nomeArquivo)

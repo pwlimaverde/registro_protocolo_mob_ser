@@ -1,5 +1,7 @@
 library dependencies_module;
 
+import 'package:get/get.dart';
+
 ///Pacakages Externos
 export 'package:return_success_or_error/return_success_or_error.dart';
 export 'package:firebase_core/firebase_core.dart';
@@ -12,7 +14,6 @@ export 'package:get_storage/get_storage.dart';
 export 'package:intl/intl.dart';
 export 'package:font_awesome_flutter/font_awesome_flutter.dart';
 export 'package:csv/csv.dart';
-export 'package:spreadsheet_decoder/spreadsheet_decoder.dart';
 
 ///Modulos
 export 'package:design_system_module/design_system_module.dart';

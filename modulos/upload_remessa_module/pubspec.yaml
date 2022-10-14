@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   dependencies_module:
     path: ../dependencies_module
+  flutter_excel: ^1.0.1
 
 dev_dependencies:
   flutter_test:

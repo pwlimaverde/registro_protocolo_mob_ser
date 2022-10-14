@@ -18,7 +18,6 @@ class ProcessamentoDadosArquivoHtmlDatasource
 
           final DateTime data = mapRemessa["arquivo"]["data da remessa"];
           final String tipo = mapRemessa["arquivo"]["tipo do arquivo"];
-          print(tipo);
 
           if (listaBruta.isNotEmpty) {
             final remessa = RemessaModel(

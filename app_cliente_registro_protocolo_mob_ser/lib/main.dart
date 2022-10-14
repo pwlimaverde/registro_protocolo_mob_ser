@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         ...SplashModule().routers,
         ...UploadRemessaModule().routers,
         ...RemessasModule().routers,
-        ...HomeModule().routers,
+        // ...HomeModule().routers,
       ],
       theme: ThemeData(
         primarySwatch: Colors.red,
