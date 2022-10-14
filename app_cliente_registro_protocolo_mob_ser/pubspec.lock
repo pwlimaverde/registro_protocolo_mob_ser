@@ -497,13 +497,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  spreadsheet_decoder:
-    dependency: transitive
-    description:
-      name: spreadsheet_decoder
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.1"
   stack_trace:
     dependency: transitive
     description:
