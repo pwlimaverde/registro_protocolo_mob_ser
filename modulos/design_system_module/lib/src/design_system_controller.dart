@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:dependencies_module/dependencies_module.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_excel/excel.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
@@ -111,6 +112,21 @@ class DesignSystemController extends GetxController {
   //     },
   //   );
   // }
+
+  Widget iconDownloadXlsx({required RemessaModel filtro}) {
+    return IconButton(
+      padding: const EdgeInsets.all(0),
+      alignment: Alignment.centerLeft,
+      icon: const Icon(
+        size: 40,
+        Icons.download,
+        color: Colors.grey,
+      ),
+      onPressed: (() {
+        _downloadXlsx(filtro: filtro);
+      }),
+    );
+  }
 
   Widget iconButtonPrint({required RemessaModel filtro}) {
     return IconButton(
@@ -382,6 +398,102 @@ class DesignSystemController extends GetxController {
   //   return PdfColors.grey100;
   // }
 
+  void _downloadXlsx({required RemessaModel filtro}) async {
+    const campos = <String>[
+      "ID Cliente",
+      "Cliente",
+      "Documento",
+      "Email",
+      "Telefone Fixo",
+      "Telefone Movel",
+      "ID Contrato",
+      "Data Habilitacao contrato",
+      "Número de Boleto",
+      "Forma de Cobrança",
+      "Data Vencimento Fatura",
+      "Valor Fatura",
+      "Data Emissao Fatura",
+      "Arquivo",
+      "Data Impressão Fatura",
+      "UF",
+      "Cidade",
+      "Bairro",
+      "Tipo Logradouro",
+      "Logradouro",
+      "Numero",
+      "CEP",
+      "Solicitante da Geração",
+      "ID Fatura",
+      "Referencia",
+      "Cód. De Barras",
+      "Receb Graf",
+      "Imp em massa",
+      "Term Imp",
+      "Upload",
+    ];
+
+    var excel = Excel.createExcel();
+    Sheet sheetObject = excel[excel.getDefaultSheet()!];
+    CellStyle cellStyleTitulos =
+        CellStyle(horizontalAlign: HorizontalAlign.Center, bold: true);
+
+    sheetObject.merge(
+        CellIndex.indexByString("A1"), CellIndex.indexByString("AD1"),
+        customValue: "SISTEMA DE REGISTRO DE PROTOCOLO");
+
+    var titulo = sheetObject
+        .cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 0));
+    titulo.cellStyle = cellStyleTitulos;
+
+    for (var coluna = 0; coluna < campos.length; coluna++) {
+      var cell = sheetObject
+          .cell(CellIndex.indexByColumnRow(columnIndex: coluna, rowIndex: 1));
+      cell.value = campos[coluna];
+      cell.cellStyle = cellStyleTitulos;
+    }
+
+    for (BoletoModel boleto in filtro.remessa) {
+      int indexBoleto = filtro.remessa.indexOf(boleto) + 2;
+      final listValores = boleto.toListXlsx();
+      int indexValor = 0;
+      for (dynamic valor in listValores) {
+        // print(valor);
+        sheetObject
+            .cell(CellIndex.indexByColumnRow(
+                columnIndex: indexValor, rowIndex: indexBoleto))
+            .value = valor;
+        indexValor++;
+      }
+      sheetObject
+          .cell(CellIndex.indexByColumnRow(
+              columnIndex: indexValor, rowIndex: indexBoleto))
+          .value = _gerarCodigoDeBarras(boleto: boleto);
+    }
+
+    // for (var table in excel.tables.keys) {
+    //   print(table); //sheet Name
+    //   print(excel.tables[table]?.maxCols);
+    //   print(excel.tables[table]?.maxRows);
+    //   for (var row in excel.tables[table]!.rows) {
+    //     print("$row");
+    //   }
+    // }
+
+    excel.save(fileName: "${filtro.nomeArquivo} - FILTRO.xlsx");
+  }
+
+  String _gerarCodigoDeBarras({required BoletoModel boleto}) {
+    const sufixo = "ALJ";
+    final codBoleto = boleto.numeroDeBoleto;
+    String complementoZero = "";
+    for (var zero = 0; zero < 14 - (codBoleto!.length); zero++) {
+      complementoZero = "${complementoZero}0";
+    }
+    final tipo = boleto.formaDeCobranca!.contains("CARNE") ? "C" : "B";
+    const prefixo = "MB";
+    return "$prefixo$tipo$complementoZero$codBoleto$sufixo";
+  }
+
   _showPrintDialog({required RemessaModel filtro}) {
     return Get.dialog(
       AlertDialog(
@@ -452,7 +564,7 @@ class DesignSystemController extends GetxController {
                     ),
                   ),
                   _codigoDeBarras(
-                    data: boletoModel.numeroDeBoleto.toString(),
+                    data: _gerarCodigoDeBarras(boleto: boletoModel),
                   ),
                   pw.Padding(
                     padding: const pw.EdgeInsets.fromLTRB(15, 60, 22, 10),
@@ -507,7 +619,7 @@ class DesignSystemController extends GetxController {
     final double larguraCodigoDeBarras =
         (data.toString().length * 10.5).toDouble();
     return pw.Padding(
-      padding: const pw.EdgeInsets.fromLTRB(10, 10, 10, 80),
+      padding: const pw.EdgeInsets.fromLTRB(10, 10, 10, 83),
       child: pw.Container(
         // color: PdfColors.red100,
         child: pw.Row(
@@ -616,7 +728,7 @@ class DesignSystemController extends GetxController {
   }) async {
     final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
     final netImage = await networkImage(
-        "https://cors-anywhere.herokuapp.com/https://firebasestorage.googleapis.com/v0/b/registro-protocolo-mob.appspot.com/o/modelo%2FBASE-PROTOCOLO-MOB.jpeg?alt=media&token=b1b1c610-1c66-4ad1-9754-d10f280aef02");
+        "https://firebasestorage.googleapis.com/v0/b/registro-protocolo-mob-ser.appspot.com/o/modelo%2FBASE-PROTOCOLO-MOB.jpeg?alt=media&token=ae620a57-fdcc-4f65-83d3-2275d1f70b8c");
     // for (BoletoModel boleto in filtro) {
     //   final codigoDeBarras = await networkImage(
     //       "https://cors-anywhere.herokuapp.com/https://berrywing.com/barcode/Code128.aspx?bc=${boleto.numeroDeBoleto}");

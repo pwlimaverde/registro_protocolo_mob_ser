@@ -9,7 +9,7 @@ class HomePage extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return designSystemController.scaffold(
-      body: const BodyHomeWidget(),
+      body: BodyHomeWidget(),
       page: 0,
       context: context,
     );

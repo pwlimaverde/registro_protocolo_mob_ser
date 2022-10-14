@@ -6,22 +6,22 @@ class CarregarRemessasFirebaseDatasource
   Future<Stream<List<RemessaModel>>> call(
       {required ParametersReturnResult parameters}) async {
     try {
-      final listaRemessas = <RemessaModel>[];
-      final snapshot =
-          await FirebaseFirestore.instance.collection("remessas").get();
+      // final listaRemessas = <RemessaModel>[];
+      // final snapshot =
+      //     await FirebaseFirestore.instance.collection("remessas").get();
 
-      final teste = snapshot.docs.map((e) => e.data()).toList();
-      for (Map<String, dynamic> map in teste) {
-        listaRemessas.add(RemessaModel.fromMap(map));
-      }
+      // final teste = snapshot.docs.map((e) => e.data()).toList();
+      // for (Map<String, dynamic> map in teste) {
+      //   listaRemessas.add(RemessaModel.fromMap(map));
+      // }
 
-      final teste2 =
+      final snapshots =
           FirebaseFirestore.instance.collection("remessas").snapshots();
 
-      final teste3 = teste2.map((event) {
-        List<RemessaModel> teste =
+      final remessas = snapshots.map((event) {
+        List<RemessaModel> list =
             event.docs.map((e) => RemessaModel.fromMap(e.data())).toList();
-        return teste;
+        return list;
       });
 
       // teste3.listen((event) {
@@ -30,7 +30,7 @@ class CarregarRemessasFirebaseDatasource
       //   print("******");
       // });
 
-      return teste3;
+      return remessas;
     } catch (e) {
       throw Exception(
           "Erro ao carregar os dados das remessas no banco de dados");

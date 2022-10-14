@@ -74,7 +74,7 @@ _todasRemessasList() {
             child: Card(
               elevation: 0.5,
               child: SizedBox(
-                width: 550,
+                width: 615,
                 child: ListTile(
                   title: Text(nomeRemessa),
                   subtitle: Column(
@@ -92,8 +92,25 @@ _todasRemessasList() {
                       ),
                     ],
                   ),
-                  trailing: designSystemController.iconButtonPrint(
-                      filtro: remessaModel),
+                  trailing: SizedBox(
+                    width: 115,
+                    height: 100,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        designSystemController.iconButtonPrint(
+                          filtro: remessaModel,
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        designSystemController.iconDownloadXlsx(
+                          filtro: remessaModel,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),

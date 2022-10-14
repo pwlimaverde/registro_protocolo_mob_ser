@@ -95,7 +95,7 @@ class UploadRemessaController extends GetxController
     final arquivos = await uploadArquivoHtmlPresenter(
       parameters: NoParams(
         error: ErroUploadArquivo(
-          message: "Erro ao fazer o upload do arquivo.",
+          message: "Erro ao Erro ao carregar os arquivos.",
         ),
         showRuntimeMilliseconds: true,
         nameFeature: "Carregamento de Arquivo",
@@ -107,10 +107,10 @@ class UploadRemessaController extends GetxController
       coreModuleController.message(
         MessageModel.error(
           title: 'Carregamento de arquivos',
-          message: 'Erro ao carregar os arquivos - ${arquivos.result}',
+          message: 'Erro ao carregar os arquivos',
         ),
       );
-      throw Exception("Erro ao carregar os arquivos - ${arquivos.result}");
+      throw Exception("Erro ao carregar os arquivos");
     }
   }
 
@@ -119,7 +119,7 @@ class UploadRemessaController extends GetxController
     final mapeamento = await mapeamentoDadosArquivoHtmlUsecase(
       parameters: ParametrosMapeamentoArquivoHtml(
         error: ErroUploadArquivo(
-          message: "Erro ao fazer o mapeamento do arquivo.",
+          message: "Erro ao mapear os arquivos.",
         ),
         nameFeature: 'Mapeamento Arquivo',
         showRuntimeMilliseconds: true,
@@ -132,10 +132,10 @@ class UploadRemessaController extends GetxController
       coreModuleController.message(
         MessageModel.error(
           title: 'Mapeamento de arquivos',
-          message: 'Erro ao mapear os arquivos - ${mapeamento.result}',
+          message: 'Erro ao mapear os arquivos.',
         ),
       );
-      throw Exception("Erro ao mapear os arquivos - ${mapeamento.result}");
+      throw Exception("Erro ao mapear os arquivos.");
     }
   }
 
@@ -209,21 +209,31 @@ class UploadRemessaController extends GetxController
   Future<void> _uploadRemessas({
     required List<RemessaModel> novasRemessas,
   }) async {
-    if (novasRemessas.isNotEmpty) {
-      final Iterable<Future<RemessaModel>> enviarRemessasFuturo =
-          novasRemessas.map(_enviarNovaRemessa);
+    try {
+      if (novasRemessas.isNotEmpty) {
+        final Iterable<Future<RemessaModel>> enviarRemessasFuturo =
+            novasRemessas.map(_enviarNovaRemessa);
 
-      final Future<Iterable<RemessaModel>> waited =
-          Future.wait(enviarRemessasFuturo);
+        final Future<Iterable<RemessaModel>> waited =
+            Future.wait(enviarRemessasFuturo);
 
-      await waited;
+        await waited;
+        _uploadRemessaList(novasRemessas);
+        coreModuleController.message(
+          MessageModel.info(
+            title: "Upload de Remessa",
+            message: "Upload de ${novasRemessas.length} Remessa com Sucesso!",
+          ),
+        );
+      }
+    } catch (e) {
       coreModuleController.message(
-        MessageModel.info(
-          title: "Upload de Remessa",
-          message: "Upload de ${novasRemessas.length} Remessa com Sucesso!",
+        MessageModel.error(
+          title: 'Upload de Remessa',
+          message: 'Erro ao fazer o Upload da Remessa!',
         ),
       );
-      _uploadRemessaList(novasRemessas);
+      throw Exception("Erro ao fazer o Upload da Remessa!");
     }
   }
 
@@ -232,7 +242,8 @@ class UploadRemessaController extends GetxController
       parameters: ParametrosUploadRemessa(
         remessaUpload: model,
         error: ErroUploadArquivo(
-            message: "Erro ao fazer o upload da Remessa para o banco de dados"),
+            message:
+                "Erro ao fazer o upload da Remessa para o banco de dados!"),
         showRuntimeMilliseconds: true,
         nameFeature: "upload firebase",
       ),
@@ -243,11 +254,11 @@ class UploadRemessaController extends GetxController
     } else {
       coreModuleController.message(
         MessageModel.error(
-          title: 'Upload de Remessa',
-          message: 'Erro enviar $model para o banco de dados!',
+          title: 'Upload de Remessa Firebase',
+          message: 'Erro enviar a remessa para o banco de dados!',
         ),
       );
-      throw Exception("Erro ao enviar para o banco de dados!");
+      throw Exception("Erro enviar a remessa para o banco de dados!");
     }
   }
 }

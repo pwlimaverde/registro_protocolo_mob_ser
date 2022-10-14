@@ -44,8 +44,6 @@ dependencies:
   intl: ^0.17.0
   font_awesome_flutter: ^10.2.1
   csv: ^5.0.1
-  spreadsheet_decoder: ^2.1.0
-  
 
 dev_dependencies:
   flutter_test:

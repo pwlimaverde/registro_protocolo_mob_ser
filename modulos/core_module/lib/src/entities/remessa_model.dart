@@ -15,12 +15,13 @@ class RemessaModel {
   }) : quantidadeProtocolos = remessa.length;
 
   Map<String, dynamic> toMap() {
-    return {
+    final Map<String, dynamic> map = {
       'nomeArquivo': nomeArquivo,
       'data': data,
       'upload': upload,
       'remessa': remessa.map((x) => x.toMap()).toList(),
     };
+    return map;
   }
 
   factory RemessaModel.fromMap(Map<String, dynamic> map) {

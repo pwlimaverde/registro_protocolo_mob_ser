@@ -1,4 +1,5 @@
 import 'package:dependencies_module/dependencies_module.dart';
+import 'package:flutter_excel/excel.dart' as flutterexcel;
 import 'dart:convert' as convert;
 
 import '../../../utils/parametros/parametros_upload_remessa_module.dart';
@@ -50,31 +51,36 @@ class MapeamentoDadosArquivoHtmlDatasource
     required Map<String, Uint8List> map,
   }) {
     try {
-      var decoder = SpreadsheetDecoder.decodeBytes(map.values.first);
-      List<List<dynamic>> listXlsx = [];
+      var excel = flutterexcel.Excel.decodeBytes(map.values.first);
+      flutterexcel.Sheet sheetObject = excel[excel.getDefaultSheet()!];
+      // List<List<dynamic>> listXlsx = [];
       Map<String, dynamic> mapXlsx = {};
-      List<List<dynamic>> listaDados = [];
+      // List<List<dynamic>> listaDados = [];
       List<Map<String, String>> mapDados = [];
 
-      listXlsx.addAll(decoder.tables[decoder.tables.keys.first]!.rows);
+      // listXlsx.addAll(decoder.tables[decoder.tables.keys.first]!.rows);
+      // print(listXlsx);
 
       mapXlsx.addAll({"nome do arquivo": map.keys.first.split(".")[0]});
-
-      final DateTime dataProcessada = DateTime.parse(listXlsx[0].last);
+      final dataProcessada = DateTime.parse(sheetObject.rows[0][24]?.value);
       mapXlsx.addAll({"data da remessa": dataProcessada});
 
       mapXlsx.addAll({"tipo do arquivo": "xlsx"});
 
-      listaDados.addAll(listXlsx);
-      listaDados.removeRange(0, 2);
+      // listaDados.addAll(listXlsx);
+      // listaDados.removeRange(0, 2);
 
-      if (listaDados.isNotEmpty) {
-        final List<dynamic> cabecario = listXlsx[1];
-        for (List<dynamic> lista in listaDados) {
+      if (sheetObject.rows.isNotEmpty) {
+        final cabecario = sheetObject.rows[1];
+        sheetObject.removeRow(0);
+        sheetObject.removeRow(0);
+
+        for (List<flutterexcel.Data?> row in sheetObject.rows) {
           Map<String, String> modelJason = {};
-          for (dynamic item in lista) {
-            int indexL = lista.indexOf(item);
-            modelJason.addAll({"${cabecario[indexL]}": "$item"});
+          for (flutterexcel.Data? celula in row) {
+            int indexL = row.indexOf(celula);
+            modelJason.addAll(
+                {"${cabecario[indexL]?.value}": "${celula?.value ?? "."}"});
           }
           final key1 = modelJason.keys.first;
           final value1 = int.tryParse(modelJason['ID Cliente'].toString());
@@ -121,9 +127,11 @@ class MapeamentoDadosArquivoHtmlDatasource
         List<dynamic> cabecario = listCsv[1];
         for (List<dynamic> lista in listaDados) {
           Map<String, String> modelJason = {};
+          int index = 0;
           for (dynamic item in lista) {
-            int indexL = lista.indexOf(item);
-            modelJason.addAll({"${cabecario[indexL]}": "$item"});
+            modelJason
+                .addAll({"${cabecario[index]}": item != "" ? "$item" : "."});
+            index++;
           }
           final key1 = modelJason.keys.first;
           final value1 = int.tryParse(modelJason['ID Cliente'].toString());
